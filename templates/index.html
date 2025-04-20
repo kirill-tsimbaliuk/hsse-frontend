@@ -1,0 +1,42 @@
+<html>
+
+<head>
+    <title>Game</title>
+    <link href="static/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="window" id="window" style="visibility: visible;">
+        <div class="main">
+            <button onclick="start()">
+            </button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="menu">
+            <button onclick="pause()">
+                Меню
+            </button>
+            <div></div>
+            <div class="info">
+                <p>Score</p>
+                <p id="score">10000</p>
+            </div>
+            <div class="progress">
+                <div class="health" id="health" style="width: 100%;"></div>
+            </div>
+            <div class="progress">
+                <div class="energy" id="energy" style="width: 100%;"></div>
+            </div>
+        </div>
+        <canvas id="main"></canvas>
+    </div>
+
+    <script src="static/scripts/entity.js"></script>
+    <script src="static/scripts/player.js"></script>
+    <script src="static/scripts/enemy.js"></script>
+    <script src="static/scripts/background.js"></script>
+    <script src="static/scripts/main.js"></script>
+</body>
+
+</html>
