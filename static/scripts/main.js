@@ -1,5 +1,3 @@
-const window_element = document.getElementById('window');
-
 const canvas = document.getElementById('main');
 const context = canvas.getContext('2d');
 
@@ -16,6 +14,13 @@ var player;
 
 function pause() {
     play = !play;
+
+    var button = document.getElementById('play-button');
+    if (play) {
+        button.textContent = "Пауза";
+    } else {
+        button.textContent = "Продолжить";
+    }
 }
 
 function checkCollision(entity1, entity2) {
@@ -28,13 +33,14 @@ function checkCollision(entity1, entity2) {
 
 function loop() {
     requestAnimationFrame(loop);
+    if (!play) {
+        return;
+    }
+
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     background.Update();
     score.Update();
-    if (!play) {
-        return;
-    }
 
     // processing Update
     var for_deleting = []
@@ -75,7 +81,7 @@ function KeysUp(event) {
     }
 }
 
-function start() {
+function startGame() {
     keys = [];
     entities = [];
 
@@ -91,23 +97,44 @@ function start() {
     document.addEventListener('keydown', KeysDown);
     document.addEventListener('keyup', KeysUp);
     play = true;
-    window_element.style = "visibility: hidden;"
+
+    var button = document.getElementById('play-button');
+    button.textContent = "Пауза";
+    button.onclick = pause;
 }
 
-function finish() {
+function askName() {
+    const window_element = document.getElementById('window');
     window_element.style = "visibility: visible;"
     play = false;
+}
 
-    console.log("Your result ", score.score);
+function showMenu() {
+    const window_element = document.getElementById('window');
+    window_element.style = "visibility: hidden;"
+    var button = document.getElementById('play-button');
+    button.textContent = "Играть";
+    button.onclick = startGame;
+}
+
+const formElement = document.getElementById('name-form');
+formElement.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const formData = new FormData(formElement);
+    const name = formData.get('name');
+    formElement.reset();
 
     fetch('/score/', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({key: 'value'}) // Ваши данные для отправки
-      })
-      .then(res => res.json())
-      .then(data => console.log('Успешно:', data))
-      .catch(error => console.error('Ошибка:', error));
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, score: score.score })
+    }).then(showMenu);
+});
+
+function showAbout() {
+    context.fillText("Hello world", 100, 100);
+    console.log("Hello");
 }
 
 requestAnimationFrame(loop);
+showMenu();

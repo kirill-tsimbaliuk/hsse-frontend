@@ -3,24 +3,33 @@
 <head>
     <title>Game</title>
     <link href="static/main.css" rel="stylesheet">
+    
 </head>
 
 <body>
-    <div class="window" id="window" style="visibility: visible;">
+    <div class="window" id="window" style="visibility: hidden;">
         <div class="main">
-            <button onclick="start()">
-            </button>
+            <form id="name-form">
+                <input type="text" name="name">
+                <input type="submit">
+            </form>
         </div>
     </div>
     <div class="container">
         <div class="menu">
-            <button onclick="pause()">
-                Меню
+            <button onclick="showAbout()">
+                Об игре
+            </button>
+            <button id="play-button" onclick="startGame()">
+                Играть
+            </button>
+            <button>
+                Результаты
             </button>
             <div></div>
             <div class="info">
                 <p>Score</p>
-                <p id="score">10000</p>
+                <p id="score">0</p>
             </div>
             <div class="progress">
                 <div class="health" id="health" style="width: 100%;"></div>

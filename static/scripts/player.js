@@ -70,7 +70,7 @@ class Player extends Entity {
         this.health -= damage;
         if (this.health < 0) {
             this.health = 0;
-            finish();
+            askName();
         }
     }
 
