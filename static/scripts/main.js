@@ -9,6 +9,7 @@ var keys = [];
 var entities = [];
 var play = false;
 var showing_about = false;
+var showing_scores = false;
 var background = new BackgroundController(stars_count);
 var score = new ScoreController();
 var player;
@@ -19,7 +20,7 @@ function pause() {
     var button = document.getElementById('play-button');
     if (play) {
         button.textContent = "Пауза";
-        if (showing_about) { showAbout(); }
+        hideAllMenuWindow();
     } else {
         button.textContent = "Продолжить";
     }
@@ -36,7 +37,7 @@ function checkCollision(entity1, entity2) {
 function drawFolder() {
     context.fillRect(0, 0, canvas.width, canvas.height);
     background.Update();
-    // draw table???
+    // draw picture
 }
 
 function loop() {
@@ -91,7 +92,7 @@ function KeysUp(event) {
 }
 
 function startGame() {
-    if (showing_about) { showAbout(); }
+    hideAllMenuWindow();
     keys = [];
     entities = [];
 
@@ -132,6 +133,9 @@ formElement.addEventListener('submit', (event) => {
     event.preventDefault();
     const formData = new FormData(formElement);
     const name = formData.get('name');
+    if (!name) {
+        return;
+    }
     formElement.reset();
 
     fetch('/score/', {
@@ -149,6 +153,53 @@ function showAbout() {
     } else {
         window_element.style = "visibility: hidden;"
     }
+}
+
+function processData(data) {
+    const last_table = document.getElementById('score-table');
+    if (last_table) { last_table.remove(); }
+
+    const table = document.createElement('table');
+    const header = table.createTHead();
+    const tr = document.createElement("tr");
+    const header_name = document.createElement("th");
+    header_name.textContent = "Имя пользователя";
+    const header_score = document.createElement("th");
+    header_score.textContent = "Счёт"
+    tr.appendChild(header_name);
+    tr.appendChild(header_score);
+    header.appendChild(tr);
+    data['records'].forEach(
+        item => {
+            const row = table.insertRow();
+            const name_cell = row.insertCell();
+            name_cell.textContent = item['name'];
+            const score_cell = row.insertCell();
+            score_cell.textContent = item['score'];
+        }
+    );
+
+    table.className = "score-table";
+    table.id = 'score-table';
+    document.getElementById("score-window").appendChild(table);
+}
+
+function showScores() {
+    showing_scores = !showing_scores;
+    const window_element = document.getElementById('score-window');
+    if (showing_scores) {
+        window_element.style = "visibility: visible;"
+        fetch('/score/10/', {
+            method: 'GET'
+        }).then((data) => data.json()).then((data) => processData(data));
+    } else {
+        window_element.style = "visibility: hidden;"
+    }
+}
+
+function hideAllMenuWindow() {
+    if (showing_about) { showAbout(); }
+    if (showing_scores) { showScores(); }
 }
 
 requestAnimationFrame(loop);

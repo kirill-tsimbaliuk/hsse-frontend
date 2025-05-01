@@ -21,7 +21,6 @@ async def index(request: Request):
 
 @app.post("/score/")
 async def create_score(request: ScoreRequest):
-    print(request.name, request.score)
     with Session(get_engine()) as session:
         ScoreRepository.create_record(session, request)
     return Response(status_code=200)

@@ -67,13 +67,30 @@ canvas {
 .final-window .content {
     position: absolute;
     width: 50vw;
-    height: 50vh;
     border-radius: 10px;
     background-color: white;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+}
+
+.final-window .content .name-input {
+    padding: 5px;
+    border: 1px solid grey;
+    width: 90%;
+    border-radius: 5px;
+    line-height: 1.5;
+}
+
+.final-window .content .submit-button {
+    margin: 5%;
+    padding: 7px;
+    border-radius: 5px;
+}
+
+.final-window .content .submit-button:hover {
+    border-radius: 10px;
 }
 
 .about-window {
@@ -85,4 +102,33 @@ canvas {
     border-radius: 10px;
     background-color: white;
     padding: 15px;
+}
+
+.score-window {
+    position: absolute;
+    width: 50vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    background-color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+.score-table {
+	width: 100%;
+	margin-bottom: 20px;
+	border: 1px solid #dddddd;
+	border-collapse: collapse; 
+}
+.score-table th {
+	font-weight: bold;
+	padding: 5px;
+	background: #efefef;
+	border: 1px solid #dddddd;
+}
+.score-table td {
+	border: 1px solid #dddddd;
+	padding: 5px;
 }
