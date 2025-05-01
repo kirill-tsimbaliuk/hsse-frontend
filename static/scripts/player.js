@@ -85,12 +85,24 @@ class Player extends Entity {
         if (this.energy < 100) {
             this.energy += 0.5;
         }
+        if (this.energy < 0) {
+            this.energy = 0;
+        }
         this.health_element.style = "width: " + this.health + "%;";
         this.energy_element.style = "width: " + this.energy + "%;";
     }
 
     UpdateImage() {
         this.img.src = "static/img/player_" + this.direction + ".png";
+    }
+
+    EnergyCost(count) {
+        if (this.energy < count) {
+            return false;
+        } else {
+            this.energy -= count;
+            return true;
+        }
     }
 
     Update() {
@@ -128,8 +140,25 @@ class Player extends Entity {
         this.ctx.drawImage(this.img, this.x, this.y, this.size, this.size);
     }
 
+    Teleport() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+    }
+
+    checkAbillities(event) {
+        if (event.key == "q") {
+            if (this.EnergyCost(10)) { this.Heal(5); }
+            return true;
+        }  else if (event.key == "e") {
+            if (this.EnergyCost(50)) { this.Teleport(); }
+            return true;
+        }
+        
+        return false;
+    }
+
     KeyDown(event) {
-        if (this.energy - 10 < 0) {
+        if (this.checkAbillities(event) || this.energy - 10 < 0) {
             return;
         }
         var x = this.x + this.size / 2;
@@ -147,6 +176,5 @@ class Player extends Entity {
             this.energy -= 10;
             entities.push(new PlayerBullet(x, y, "right", this.ctx));
         }
-
     }
 }

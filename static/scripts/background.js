@@ -6,12 +6,14 @@ class BackgroundController {
             var y_position = Math.random() * canvas.height;
             this.stars.push([x_position, y_position]);
         }
+        this.img = new Image();
+        this.img.src = "static/img/star.png";
     }
 
     Update() {
         context.fillStyle = "white";
         for (var i = 0; i < this.stars.length; ++i) {
-            context.fillRect(this.stars[i][0], this.stars[i][1], 3, 3);
+            context.drawImage(this.img, this.stars[i][0],this.stars[i][1], 30, 30);
         }
         context.fillStyle = "black";
     }

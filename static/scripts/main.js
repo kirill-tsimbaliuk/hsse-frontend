@@ -146,6 +146,7 @@ formElement.addEventListener('submit', (event) => {
 });
 
 function showAbout() {
+    if (showing_scores) { showScores(); }
     showing_about = !showing_about;
     const window_element = document.getElementById('about-window');
     if (showing_about) {
@@ -185,6 +186,7 @@ function processData(data) {
 }
 
 function showScores() {
+    if (showing_about) { showAbout(); }
     showing_scores = !showing_scores;
     const window_element = document.getElementById('score-window');
     if (showing_scores) {

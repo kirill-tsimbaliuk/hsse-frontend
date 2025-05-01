@@ -47,7 +47,6 @@ class EnemyBullet extends Entity {
     }
 }
 
-
 class Enemy extends Entity {
     constructor(x, y, context) {
         super();
@@ -70,8 +69,6 @@ class Enemy extends Entity {
     CheckState() {
         if (this.health <= 0) {
             score.score += 100;
-            player.Heal(10);
-            createEnemy(canvas, context);
             createEnemy(canvas, context);
             createEnemy(canvas, context);
             this.destroy = true;
