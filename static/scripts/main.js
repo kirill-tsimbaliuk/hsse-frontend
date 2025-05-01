@@ -8,6 +8,7 @@ const stars_count = 80;
 var keys = [];
 var entities = [];
 var play = false;
+var showing_about = false;
 var background = new BackgroundController(stars_count);
 var score = new ScoreController();
 var player;
@@ -18,6 +19,7 @@ function pause() {
     var button = document.getElementById('play-button');
     if (play) {
         button.textContent = "Пауза";
+        if (showing_about) { showAbout(); }
     } else {
         button.textContent = "Продолжить";
     }
@@ -31,9 +33,16 @@ function checkCollision(entity1, entity2) {
     }
 }
 
+function drawFolder() {
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    background.Update();
+    // draw table???
+}
+
 function loop() {
     requestAnimationFrame(loop);
     if (!play) {
+        drawFolder();
         return;
     }
 
@@ -82,6 +91,7 @@ function KeysUp(event) {
 }
 
 function startGame() {
+    if (showing_about) { showAbout(); }
     keys = [];
     entities = [];
 
@@ -104,13 +114,13 @@ function startGame() {
 }
 
 function askName() {
-    const window_element = document.getElementById('window');
+    const window_element = document.getElementById('final-window');
     window_element.style = "visibility: visible;"
     play = false;
 }
 
 function showMenu() {
-    const window_element = document.getElementById('window');
+    const window_element = document.getElementById('final-window');
     window_element.style = "visibility: hidden;"
     var button = document.getElementById('play-button');
     button.textContent = "Играть";
@@ -132,8 +142,13 @@ formElement.addEventListener('submit', (event) => {
 });
 
 function showAbout() {
-    context.fillText("Hello world", 100, 100);
-    console.log("Hello");
+    showing_about = !showing_about;
+    const window_element = document.getElementById('about-window');
+    if (showing_about) {
+        window_element.style = "visibility: visible;"
+    } else {
+        window_element.style = "visibility: hidden;"
+    }
 }
 
 requestAnimationFrame(loop);
