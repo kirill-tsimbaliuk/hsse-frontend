@@ -7,12 +7,15 @@ const stars_count = 80;
 
 var keys = [];
 var entities = [];
+var new_enemy_count = 0;
+var create_boss = false;
 var play = false;
 var showing_about = false;
 var showing_scores = false;
 var background = new BackgroundController(stars_count);
 var score = new ScoreController();
 var player;
+var level = 1;
 
 function pause() {
     play = !play;
@@ -41,9 +44,9 @@ function drawFolder() {
 }
 
 function loop() {
-    requestAnimationFrame(loop);
     if (!play) {
         drawFolder();
+        requestAnimationFrame(loop);
         return;
     }
 
@@ -62,9 +65,11 @@ function loop() {
     }
 
     // deleting marked objects
+    var index_shift = 0;
     for (var i = 0; i < for_deleting.length; ++i) {
-        delete entities[for_deleting[i]];
-        entities.splice(for_deleting[i], 1);
+        delete entities[for_deleting[i] - index_shift];
+        entities.splice(for_deleting[i] - index_shift, 1);
+        index_shift += 1;
     }
 
     // collisons
@@ -75,6 +80,23 @@ function loop() {
             }
         }
     }
+
+    if (create_boss) {
+        x = 200 + Math.random() * (canvas.width - 400);
+        y = 200 + Math.random() * (canvas.height - 400);
+        entities.push(new Boss(x, y));
+        create_boss = false;
+        new_enemy_count = 0;
+    }
+
+    while (new_enemy_count > 0) {
+        x = 100 + Math.random() * (canvas.width - 200);
+        y = 100 + Math.random() * (canvas.height - 200);
+        entities.push(new Enemy(x, y, context, level * 2));
+        new_enemy_count -= 1;
+    }
+
+    requestAnimationFrame(loop);
 }
 
 function KeysDown(event) {
@@ -91,6 +113,31 @@ function KeysUp(event) {
     }
 }
 
+function enemyWasDestroyed() {
+    score.score += 100;
+    if (score.score === (500 * level)) {
+        clearEnemy();
+        create_boss = true;
+    } else {
+        new_enemy_count += 2;
+    }
+}
+
+function bossWasDestroyed() {
+    score.score += 100;
+    new_enemy_count = 3;
+    level += 1;
+}
+
+function clearEnemy() {
+    for (entity of entities) {
+        if (entity instanceof Enemy) {
+            entity.destroy = true;
+        }
+    }
+    new_enemy_count = 0;
+}
+
 function startGame() {
     hideAllMenuWindow();
     keys = [];
@@ -102,7 +149,7 @@ function startGame() {
 
     entities.push(player);
     for (var i = 0; i < 3; ++i) {
-        createEnemy(canvas, context);
+        new_enemy_count = 3;
     }
 
     document.addEventListener('keydown', KeysDown);
@@ -166,9 +213,12 @@ function processData(data) {
     const header_name = document.createElement("th");
     header_name.textContent = "Имя пользователя";
     const header_score = document.createElement("th");
-    header_score.textContent = "Счёт"
+    header_score.textContent = "Счёт";
+    const header_time = document.createElement("th");
+    header_time.textContent = "Время"
     tr.appendChild(header_name);
     tr.appendChild(header_score);
+    tr.appendChild(header_time);
     header.appendChild(tr);
     data['records'].forEach(
         item => {
@@ -177,6 +227,9 @@ function processData(data) {
             name_cell.textContent = item['name'];
             const score_cell = row.insertCell();
             score_cell.textContent = item['score'];
+            const date_cell = row.insertCell();
+            const date = new Date(item['time']);
+            date_cell.textContent = date.toDateString();
         }
     );
 

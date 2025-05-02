@@ -1,7 +1,7 @@
 class EnemyBullet extends Entity {
-    constructor(x, y, direction, context) {
+    constructor(x, y, direction, context, size = 40) {
         super();
-        this.size = 40;
+        this.size = size;
         this.x = x - this.size / 2;
         this.y = y - this.size / 2;
         this.speed = 20;
@@ -41,14 +41,14 @@ class EnemyBullet extends Entity {
 
     OnCollisionWith(entity) {
         if (entity instanceof Player) {
-            entity.Damage(5);
+            entity.Damage(0);
             this.destroy = true;
         }
     }
 }
 
 class Enemy extends Entity {
-    constructor(x, y, context) {
+    constructor(x, y, context, health_count) {
         super();
         this.x = x;
         this.y = y;
@@ -59,7 +59,7 @@ class Enemy extends Entity {
         this.size = 70;
         this.direction = "up";
         this.collision_layer = "enemy";
-        this.health = 5;
+        this.health = health_count;
         this.safe_distance = 200;
         this.counter = 0;
         this.frequency = 60;
@@ -68,10 +68,8 @@ class Enemy extends Entity {
 
     CheckState() {
         if (this.health <= 0) {
-            score.score += 100;
-            createEnemy(canvas, context);
-            createEnemy(canvas, context);
             this.destroy = true;
+            enemyWasDestroyed();
         }
     }
 
@@ -149,8 +147,88 @@ class Enemy extends Entity {
     }
 }
 
-function createEnemy(canvas, context) {
-    x = 100 + Math.random() * (canvas.width - 200);
-    y = 100 + Math.random() * (canvas.height - 200);
-    entities.push(new Enemy(x, y, context));
+class Boss extends Entity {
+    constructor(x, y) {
+        super();
+        this.x = x;
+        this.y = y;
+        this.img = new Image();
+        this.img.src = "static/img/boss.png";   
+        this.size = 100;
+        this.collision_layer = "enemy";
+        this.health = 5 * level;
+        this.speed = 10;
+        this.safe_distance = 500;
+
+        this.counter = 0;
+        this.fire_frequency = 10;
+        this.teleport_frequency = 200;
+        this.force = 1.5;
+    }
+
+    UpdateFire() {
+        this.counter += 1;
+        if (this.counter % this.fire_frequency == 0) {
+            var x = this.x + this.size / 2;
+            var y = this.y + this.size / 2;
+            var direction = "up";
+            var dx = player.x - this.x;
+            var dy = player.y - this.y;
+            if (Math.abs(dx) > Math.abs(dy)) {
+                if (dx > 0) {
+                    direction = "right";
+                } else {
+                    direction = "left";
+                }
+            } else {
+                if (dy > 0) {
+                    direction = "down";
+                } else {
+                    direction = "up";
+                }
+            }
+            entities.push(new EnemyBullet(x, y, direction, context, 60));
+        }
+        if (this.counter >= this.teleport_frequency) {
+            this.counter = 0;
+            this.x = 200 + Math.random() * (canvas.width - 400);
+            this.y = 200 + Math.random() * (canvas.height - 400);
+        }
+    }
+
+    CheckState() {
+        if (this.health <= 0) {
+            this.destroy = true;
+            bossWasDestroyed();
+        }
+    }
+
+    Update() {
+        this.UpdateFire();
+        this.CheckState();
+        var direction = { x: 0, y: 0 };
+
+        direction.x += player.x - this.x;
+        direction.y +=  player.y - this.y;
+
+        var distance = Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+        if (distance < this.safe_distance) {
+            const force = (this.safe_distance - distance) / (this.safe_distance) * this.force;
+            direction.x -= direction.x  * force;
+            direction.y -= direction.y * force;
+        }
+        distance = Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+        if (distance < 1) {
+            distance = 1;
+        }
+        if (distance < 5) {
+            direction.x = 0;
+            direction.y = 0;
+        }
+        direction.x /= distance;
+        direction.y /= distance;
+        this.x += direction.x * this.speed;
+        this.y += direction.y * this.speed;
+        context.drawImage(this.img, this.x, this.y, this.size, this.size);
+    }
 }

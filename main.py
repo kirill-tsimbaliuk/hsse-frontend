@@ -21,18 +21,18 @@ async def index(request: Request):
 
 @app.post("/score/")
 async def create_score(request: ScoreRequest):
-    with Session(get_engine()) as session:
+    with Session(get_engine(config.db_url)) as session:
         ScoreRepository.create_record(session, request)
     return Response(status_code=200)
 
 @app.get("/score/{count}/", response_model=RecordList)
 async def get_score(count : int):
-    with Session(get_engine()) as session:
+    with Session(get_engine(config.db_url)) as session:
         result = ScoreRepository.get_records(session, count)
     return result
 
 # Init application
 if __name__ == "__main__":
     config : Config = Config.load_from_json("config.json")
-    ScoreRepository.init_db(get_engine())
+    ScoreRepository.init_db(get_engine(config.db_url))
     uvicorn.run(app, host=config.host, port=config.port)

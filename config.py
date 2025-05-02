@@ -5,6 +5,7 @@ import json
 class Config:
     host : str
     port : int
+    db_url : str
 
     @staticmethod
     def load_from_json(path: str):
@@ -13,5 +14,6 @@ class Config:
 
         return Config(
                host=config['host'],
-               port=int(config['port'])
+               port=int(config['port']),
+               db_url=config['db_url']
             )

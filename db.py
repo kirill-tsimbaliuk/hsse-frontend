@@ -47,5 +47,5 @@ class ScoreRepository:
 
 
 @lru_cache(maxsize=1)
-def get_engine():
-    return create_engine("sqlite:///db.db")
+def get_engine(db_url : str) -> Engine:
+    return create_engine(db_url)

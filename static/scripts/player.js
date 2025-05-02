@@ -40,7 +40,7 @@ class PlayerBullet extends Entity {
     }
 
     OnCollisionWith(entity) {
-        if (entity instanceof Enemy) {
+        if (entity instanceof Enemy || entity instanceof Boss) {
             entity.health -= 1;
             this.destroy = true;
         }
