@@ -41,7 +41,7 @@ class EnemyBullet extends Entity {
 
     OnCollisionWith(entity) {
         if (entity instanceof Player) {
-            entity.Damage(0);
+            entity.Damage(5);
             this.destroy = true;
         }
     }

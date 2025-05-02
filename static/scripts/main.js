@@ -92,7 +92,7 @@ function loop() {
     while (new_enemy_count > 0) {
         x = 100 + Math.random() * (canvas.width - 200);
         y = 100 + Math.random() * (canvas.height - 200);
-        entities.push(new Enemy(x, y, context, level * 2));
+        entities.push(new Enemy(x, y, context, level));
         new_enemy_count -= 1;
     }
 
@@ -115,7 +115,7 @@ function KeysUp(event) {
 
 function enemyWasDestroyed() {
     score.score += 100;
-    if (score.score === (500 * level)) {
+    if (score.score === (1000 * level)) {
         clearEnemy();
         create_boss = true;
     } else {
@@ -228,7 +228,7 @@ function processData(data) {
             const score_cell = row.insertCell();
             score_cell.textContent = item['score'];
             const date_cell = row.insertCell();
-            const date = new Date(item['time']);
+            const date = new Date(item['time'] * 1000);
             date_cell.textContent = date.toDateString();
         }
     );
