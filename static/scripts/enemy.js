@@ -157,7 +157,7 @@ class Boss extends Entity {
         this.size = 100;
         this.collision_layer = "enemy";
         this.health = 5 * level;
-        this.speed = 10;
+        this.speed = 3;
         this.safe_distance = 500;
 
         this.counter = 0;
