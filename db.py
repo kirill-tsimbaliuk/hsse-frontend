@@ -34,8 +34,19 @@ class ScoreRepository:
         session.commit()
 
     @staticmethod
-    def get_records(session : Session, count : int) -> RecordList:
-        result = session.scalars(select(ScoreRecords).order_by(ScoreRecords.score.desc(), ScoreRecords.time.desc()).limit(count))
+    def get_records(session : Session, count : int, order : str) -> RecordList:
+        if order == "score-desc":
+            result = session.scalars(select(ScoreRecords).order_by(ScoreRecords.score.desc()).limit(count))
+        elif order == "score-asc":
+            result = session.scalars(select(ScoreRecords).order_by(ScoreRecords.score.asc()).limit(count))
+        elif order == "name-desc":
+            result = session.scalars(select(ScoreRecords).order_by(ScoreRecords.name.desc()).limit(count))
+        elif order == "name-asc":
+            result = session.scalars(select(ScoreRecords).order_by(ScoreRecords.name.asc()).limit(count))
+        elif order == "time-asc":
+            result = session.scalars(select(ScoreRecords).order_by(ScoreRecords.time.asc()).limit(count))
+        else:
+            result = session.scalars(select(ScoreRecords).order_by(ScoreRecords.time.desc()).limit(count))
         records = []
         for record in result:
             records.append(Record(name=record.name, score=record.score, time=record.time))

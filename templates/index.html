@@ -32,6 +32,21 @@
         <h1>
             Таблица лидеров
         </h1>
+        <div class="request-setting">
+            <form id="request-param">
+                <label for="count">Количество строк</label>
+                <input type="text" name="count">
+                <select name="order">
+                    <option value="score-desc">По счёту, по убыванию</option>
+                    <option value="score-asc">По счёту, по возрастанию</option>
+                    <option value="name-desc">По имени, по убыванию</option>
+                    <option value="name-asc">По имени, по возрастанию</option>
+                    <option value="time-desc">По времени, по убыванию</option>
+                    <option value="time-asc">По времени, по возрастанию</option>
+                </select>
+                <input type="submit" value="Отобразить">
+            </form>
+        </div>
     </div>
     <div class="container">
         <div class="menu">

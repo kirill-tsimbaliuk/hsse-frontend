@@ -192,6 +192,23 @@ formElement.addEventListener('submit', (event) => {
     }).then(showMenu);
 });
 
+const requestForm = document.getElementById('request-param');
+requestForm.addEventListener('submit', (event) => {    
+    event.preventDefault();
+    const formData = new FormData(requestForm);
+    const order = formData.get('order');
+    const count = formData.get('count');
+    if (!count) {
+        return;
+    }
+    let url = '/score/' + count + '/' + order + '/';
+    console.log(url);
+    fetch(url, {
+        method: 'GET'
+    }).then((data) => data.json()).then((data) => processData(data));
+});
+
+
 function showAbout() {
     if (showing_scores) { showScores(); }
     showing_about = !showing_about;
@@ -229,7 +246,7 @@ function processData(data) {
             score_cell.textContent = item['score'];
             const date_cell = row.insertCell();
             const date = new Date(item['time'] * 1000);
-            date_cell.textContent = date.toDateString();
+            date_cell.textContent = date.toLocaleTimeString() + " " + date.toLocaleDateString();
         }
     );
 
@@ -244,7 +261,7 @@ function showScores() {
     const window_element = document.getElementById('score-window');
     if (showing_scores) {
         window_element.style = "visibility: visible;"
-        fetch('/score/10/', {
+        fetch('/score/10/score-desc/', {
             method: 'GET'
         }).then((data) => data.json()).then((data) => processData(data));
     } else {

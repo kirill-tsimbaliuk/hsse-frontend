@@ -25,10 +25,10 @@ async def create_score(request: ScoreRequest):
         ScoreRepository.create_record(session, request)
     return Response(status_code=200)
 
-@app.get("/score/{count}/", response_model=RecordList)
-async def get_score(count : int):
+@app.get("/score/{count}/{order}", response_model=RecordList)
+async def get_score(count: int, order: str):
     with Session(get_engine(config.db_url)) as session:
-        result = ScoreRepository.get_records(session, count)
+        result = ScoreRepository.get_records(session, count, order)
     return result
 
 # Init application

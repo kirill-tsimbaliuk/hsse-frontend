@@ -67,7 +67,6 @@ canvas {
 .final-window .content {
     position: absolute;
     width: 50vw;
-    border-radius: 10px;
     background-color: white;
     top: 50%;
     left: 50%;
@@ -99,7 +98,6 @@ canvas {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 10px;
     background-color: white;
     padding: 15px;
 }
@@ -107,10 +105,12 @@ canvas {
 .score-window {
     position: absolute;
     width: 50vw;
+    max-height: 75vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 10px;
     background-color: white;
     padding: 15px;
     text-align: center;
@@ -120,7 +120,7 @@ canvas {
 	width: 100%;
 	margin-bottom: 20px;
 	border: 1px solid #dddddd;
-	border-collapse: collapse; 
+	border-collapse: collapse;
 }
 .score-table th {
 	font-weight: bold;
