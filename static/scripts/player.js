@@ -1,3 +1,15 @@
+const player_bullet_cache = {
+    "up": new Image(),
+    "down": new Image(),
+    "left": new Image(),
+    "right": new Image()
+};
+
+player_bullet_cache['up'].src = "static/img/player_bullet_up.png";
+player_bullet_cache['down'].src = "static/img/player_bullet_down.png";
+player_bullet_cache['left'].src = "static/img/player_bullet_left.png";
+player_bullet_cache['right'].src = "static/img/player_bullet_right.png";
+
 class PlayerBullet extends Entity {
     constructor(x, y, direction, context) {
         super();
@@ -6,8 +18,7 @@ class PlayerBullet extends Entity {
         this.y = y - this.size / 2;
         this.speed = 20;
         this.direction = direction;
-        this.img = new Image();
-        this.img.src = "static/img/player_bullet_" + this.direction + ".png";
+        this.img = player_bullet_cache[this.direction];
         this.ctx = context;
         this.collision_layer = "enemy";
     }
@@ -53,8 +64,16 @@ class Player extends Entity {
         this.x = x;
         this.y = y;
         this.ctx = context;
-        this.img = new Image();
-        this.img.src = "static/img/player_up.png";
+        this.img_collection = {
+            "up": new Image(),
+            "down": new Image(),
+            "left": new Image(),
+            "right": new Image(),
+        }
+        this.img_collection['up'].src = "static/img/player_up.png";
+        this.img_collection['down'].src = "static/img/player_down.png";
+        this.img_collection['left'].src = "static/img/player_left.png";
+        this.img_collection['right'].src = "static/img/player_right.png";
         this.speed = 10;
         this.size = 50;
         this.direction = "up";
@@ -90,10 +109,6 @@ class Player extends Entity {
         }
         this.health_element.style = "width: " + this.health + "%;";
         this.energy_element.style = "width: " + this.energy + "%;";
-    }
-
-    UpdateImage() {
-        this.img.src = "static/img/player_" + this.direction + ".png";
     }
 
     EnergyCost(count) {
@@ -136,8 +151,7 @@ class Player extends Entity {
             this.direction = "right";
         }
 
-        this.UpdateImage();
-        this.ctx.drawImage(this.img, this.x, this.y, this.size, this.size);
+        this.ctx.drawImage(this.img_collection[this.direction], this.x, this.y, this.size, this.size);
     }
 
     Teleport() {

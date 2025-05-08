@@ -1,3 +1,15 @@
+const enemy_bullet_cache = {
+    "up": new Image(),
+    "down": new Image(),
+    "left": new Image(),
+    "right": new Image()
+};
+
+enemy_bullet_cache['up'].src = "static/img/enemy_bullet_up.png";
+enemy_bullet_cache['down'].src = "static/img/enemy_bullet_down.png";
+enemy_bullet_cache['left'].src = "static/img/enemy_bullet_left.png";
+enemy_bullet_cache['right'].src = "static/img/enemy_bullet_right.png";
+
 class EnemyBullet extends Entity {
     constructor(x, y, direction, context, size = 40) {
         super();
@@ -6,8 +18,7 @@ class EnemyBullet extends Entity {
         this.y = y - this.size / 2;
         this.speed = 20;
         this.direction = direction;
-        this.img = new Image();
-        this.img.src = "static/img/enemy_bullet_" + this.direction + ".png";
+        this.img = enemy_bullet_cache[this.direction];
         this.ctx = context;
         this.collision_layer = "player";
     }
@@ -53,8 +64,17 @@ class Enemy extends Entity {
         this.x = x;
         this.y = y;
         this.ctx = context;
-        this.img = new Image();
-        this.img.src = "static/img/enemy_up.png";
+        this.img_collection = {
+            "up": new Image(),
+            "down": new Image(),
+            "left": new Image(),
+            "right": new Image(),
+        }
+        this.img_collection['up'].src = "static/img/enemy_up.png";
+        this.img_collection['down'].src = "static/img/enemy_down.png";
+        this.img_collection['left'].src = "static/img/enemy_left.png";
+        this.img_collection['right'].src = "static/img/enemy_right.png";
+
         this.speed = 5;
         this.size = 70;
         this.direction = "up";
@@ -73,7 +93,7 @@ class Enemy extends Entity {
         }
     }
 
-    UpdateImage(dx, dy) {
+    UpdateDirection(dx, dy) {
         if (Math.abs(dx) > Math.abs(dy)) {
             if (dx > 0) {
                 this.direction = "right";
@@ -87,7 +107,6 @@ class Enemy extends Entity {
                 this.direction = "up";
             }
         }
-        this.img.src = "static/img/enemy_" + this.direction + ".png";
     }
 
     UpdateFire() {
@@ -142,8 +161,8 @@ class Enemy extends Entity {
         this.y += direction.y * this.speed;
 
         this.UpdateFire();
-        this.UpdateImage(dx, dy);
-        this.ctx.drawImage(this.img, this.x, this.y, this.size, this.size);
+        this.UpdateDirection(dx, dy);
+        this.ctx.drawImage(this.img_collection[this.direction], this.x, this.y, this.size, this.size);
     }
 }
 
