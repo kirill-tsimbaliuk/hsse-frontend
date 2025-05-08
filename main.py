@@ -32,7 +32,8 @@ async def get_score(count: int, order: str):
     return result
 
 # Init application
+config : Config = Config.load_from_json("config.json")
+ScoreRepository.init_db(get_engine(config.db_url))
+
 if __name__ == "__main__":
-    config : Config = Config.load_from_json("config.json")
-    ScoreRepository.init_db(get_engine(config.db_url))
     uvicorn.run(app, host=config.host, port=config.port)
