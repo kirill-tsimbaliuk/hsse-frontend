@@ -1,39 +1,33 @@
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, Response
-from fastapi.templating import Jinja2Templates
-from starlette.requests import Request
-import uvicorn 
+from flask import Flask, request, jsonify, render_template
 
 from models import *
 from db import *
 from config import *
+from sqlalchemy.orm import Session
 
-app = FastAPI()
+app = Flask(__name__, static_folder="static", template_folder="templates")
 
-# Init routes
-app.mount("/static", StaticFiles(directory="static"))
-templates = Jinja2Templates(directory="templates")
+@app.route("/")
+def index():
+    return render_template("index.html")
 
-@app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
-    return templates.TemplateResponse("index.html", { "request" : request})
-
-@app.post("/score/")
-async def create_score(request: ScoreRequest):
+@app.route("/score/", methods=["POST"])
+def create_score():
+    score_data = request.get_json()
+    score_request = ScoreRequest(**score_data)
     with Session(get_engine(config.db_url)) as session:
-        ScoreRepository.create_record(session, request)
-    return Response(status_code=200)
+        ScoreRepository.create_record(session, score_request)
+    return "Created", 201
 
-@app.get("/score/{count}/{order}", response_model=RecordList)
-async def get_score(count: int, order: str):
+@app.route("/score/<int:count>/<order>/", methods=['GET'])
+def get_score(count, order):
     with Session(get_engine(config.db_url)) as session:
         result = ScoreRepository.get_records(session, count, order)
-    return result
+    return jsonify(result.model_dump())
 
 # Init application
-config : Config = Config.load_from_json("config.json")
+config: Config = Config.load_from_json("config.json")
 ScoreRepository.init_db(get_engine(config.db_url))
 
 if __name__ == "__main__":
-    uvicorn.run(app, host=config.host, port=config.port)
+    app.run(host=config.host, port=config.port)
