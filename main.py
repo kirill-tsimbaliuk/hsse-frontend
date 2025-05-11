@@ -15,6 +15,8 @@ def index():
 def create_score():
     score_data = request.get_json()
     score_request = ScoreRequest(**score_data)
+    if (len(score_request.name) >= 300):
+        return "Unprocessable entity", 422
     with Session(get_engine(config.db_url)) as session:
         ScoreRepository.create_record(session, score_request)
     return "Created", 201

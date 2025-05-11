@@ -182,7 +182,7 @@ formElement.addEventListener('submit', (event) => {
     event.preventDefault();
     const formData = new FormData(formElement);
     const name = formData.get('name');
-    if (!name) {
+    if (!name || name.length >= 300) {
         return;
     }
     formElement.reset();
@@ -204,7 +204,6 @@ requestForm.addEventListener('submit', (event) => {
         return;
     }
     let url = '/score/' + count + '/' + order + '/';
-    console.log(url);
     fetch(url, {
         method: 'GET'
     }).then((data) => data.json()).then((data) => processData(data));
