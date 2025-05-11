@@ -180,7 +180,7 @@ class Boss extends Entity {
         this.safe_distance = 500;
 
         this.counter = 0;
-        this.fire_frequency = 10;
+        this.fire_frequency = 20;
         this.teleport_frequency = 200;
         this.force = 1.5;
     }

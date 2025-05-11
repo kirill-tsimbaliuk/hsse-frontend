@@ -122,28 +122,28 @@ class Player extends Entity {
 
     Update() {
         this.UpdateData();
-        if (keys["w"]) {
+        if (keys["w"] || keys["ц"]) {
             this.y -= this.speed;
             if (this.y < 0) {
                 this.y = 0;
             }
             this.direction = "up";
         }
-        if (keys["a"]) {
+        if (keys["a"] || keys["ф"]) {
             this.x -= this.speed;
             if (this.x < 0) {
                 this.x = 0;
             }
             this.direction = "left";
         }
-        if (keys["s"]) {
+        if (keys["s"] || keys["ы"]) {
             this.y += this.speed;
             if (this.y + this.size > canvas.height) {
                 this.y = canvas.height - this.size;
             }
             this.direction = "down";
         }
-        if (keys["d"]) {
+        if (keys["d"] || keys["в"]) {
             this.x += this.speed;
             if (this.x + this.size > canvas.width) {
                 this.x = canvas.width + this.size;
@@ -160,10 +160,10 @@ class Player extends Entity {
     }
 
     checkAbillities(event) {
-        if (event.key == "q") {
+        if (event.key == "q" || event.key == "й") {
             if (this.EnergyCost(10)) { this.Heal(5); }
             return true;
-        }  else if (event.key == "e") {
+        }  else if (event.key == "e" || event.key == "у") {
             if (this.EnergyCost(50)) { this.Teleport(); }
             return true;
         }

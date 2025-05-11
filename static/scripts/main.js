@@ -16,6 +16,7 @@ var background = new BackgroundController(stars_count);
 var score = new ScoreController();
 var player;
 var level = 1;
+var timer = Date.now();
 
 function pause() {
     play = !play;
@@ -40,15 +41,18 @@ function checkCollision(entity1, entity2) {
 function drawFolder() {
     context.fillRect(0, 0, canvas.width, canvas.height);
     background.Update();
-    // draw picture
 }
 
 function loop() {
+    requestAnimationFrame(loop);
     if (!play) {
         drawFolder();
-        requestAnimationFrame(loop);
         return;
     }
+    if (Date.now() - timer < 15) {
+        return;
+    }
+    timer = Date.now();
 
     context.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -95,8 +99,6 @@ function loop() {
         entities.push(new Enemy(x, y, context, level));
         new_enemy_count -= 1;
     }
-
-    requestAnimationFrame(loop);
 }
 
 function KeysDown(event) {
